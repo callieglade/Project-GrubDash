@@ -57,7 +57,7 @@ function createDish(req, res) {
 // GET /dishes/:dishId => readDish()
 // Responds with the data of the dish matching parameter dishId.
 function readDish(req, res) {
-
+  res.json({ data: res.locals.dish });
 }
 
 // PUT /dishes/:dishId => updateDish()
@@ -69,6 +69,6 @@ function updateDish(req, res) {
 module.exports = {
   listDishes,
   createDish: [validateDish, createDish],
-  readDish,
+  readDish:   [findDish, readDish],
   updateDish,
 }
