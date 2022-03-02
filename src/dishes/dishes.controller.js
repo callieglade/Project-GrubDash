@@ -63,12 +63,13 @@ function readDish(req, res) {
 // PUT /dishes/:dishId => updateDish()
 // Updates the dish matching parameter dishId and responds with the updated dish data.
 function updateDish(req, res) {
-  
+  res.locals.dish = req.body.data;
+  res.json({ data: res.locals.dish });
 }
 
 module.exports = {
   listDishes,
   createDish: [validateDish, createDish],
   readDish:   [findDish, readDish],
-  updateDish,
+  updateDish: [findDish, validateDish, updateDish],
 }
