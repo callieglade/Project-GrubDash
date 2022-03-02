@@ -8,7 +8,23 @@ const nextId = require("../utils/nextId");
 
 // MIDDLEWARE FUNCTIONS
 
+// Validates all fields provided for a dish, responds with code 400 and error message if validation fails.
+function validateDish(req, res, next) {
+  const { data: { dish } = {} } = req.body;
+  const message = "";
+  
+  if(!dish.name || dish.name === "") message = "Dish must include a name";
+  if(!dish.description || dish.description === "") message = "Dish must include a description";
+  if(!dish.price) message = "Dish must include a price";
+  if(dish.price < 0 || Number(dish.price) === NaN) message = "Dish must have a price that is an integer greater than 0";
+  if(!dish.image_url || dish.image_url === "") message = "Dish must include a image_url"
 
+  if (!message) {
+    res.locals.dish = dish;
+    return next();
+  }
+  return next({ status: 400, message: message });
+}
 
 // HANDLER FUNCTIONS
 
