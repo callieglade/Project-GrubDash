@@ -38,10 +38,14 @@ function updateOrder(req, res) {
 
 // DELETE /orders/:orderId => destroyOrder()
 // Deletes the order matching parameter orderId and responds with code 204.
+function destroyOrder(req, res) {
+
+}
 
 module.exports = {
   listOrders,
   createOrder,
   readOrder,
   updateOrder,
+  destroyOrder,
 }
