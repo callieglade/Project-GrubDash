@@ -12,7 +12,7 @@ const nextId = require("../utils/nextId");
 function validateDish(req, res, next) {
   const { data: { dish } = {} } = req.body;
   const message = "";
-  
+
   if(!dish.name || dish.name === "") message = "Dish must include a name";
   if(!dish.description || dish.description === "") message = "Dish must include a description";
   if(!dish.price) message = "Dish must include a price";
@@ -37,7 +37,8 @@ function listDishes(req, res) {
 // POST /dishes => createDish()
 // Creates a new dish and responds with the newly created dish data.
 function createDish(req, res) {
-
+  dishes.push(res.locals.dish);
+  res.status(201).json({ data: dish });
 }
 
 // GET /dishes/:dishId => readDish()
@@ -54,7 +55,7 @@ function updateDish(req, res) {
 
 module.exports = {
   listDishes,
-  createDish,
+  createDish: [validateDish, createDish],
   readDish,
   updateDish,
 }
