@@ -50,6 +50,7 @@ function listDishes(req, res) {
 // POST /dishes => createDish()
 // Creates a new dish and responds with the newly created dish data.
 function createDish(req, res) {
+  res.locals.dish.id = nextId;
   dishes.push(res.locals.dish);
   res.status(201).json({ data: dish });
 }
