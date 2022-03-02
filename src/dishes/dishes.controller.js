@@ -44,7 +44,7 @@ function findDish(req, res, next) {
 // GET /dishes => listDishes()
 // Responds with a list of all existing dish data.
 function listDishes(req, res) {
-  req.json({ data: dishes });
+  res.json({ data: dishes });
 }
 
 // POST /dishes => createDish()
