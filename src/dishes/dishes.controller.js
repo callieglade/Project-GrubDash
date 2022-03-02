@@ -8,6 +8,7 @@ const nextId = require("../utils/nextId");
 
 // MIDDLEWARE FUNCTIONS
 
+// validateDish()
 // Validates all fields provided for a dish, responds with code 400 and error message if validation fails.
 function validateDish(req, res, next) {
   const { data: { dish } = {} } = req.body;
@@ -24,6 +25,18 @@ function validateDish(req, res, next) {
     return next();
   }
   return next({ status: 400, message: message });
+}
+
+// findDish()
+// Searches the dishes array for the dish matching the provided dishId, responds with code 404 if dish is not found
+function findDish(req, res, next) {
+  const dishId = Number(req.params.dishId);
+  const foundDish = dishes.find(dish => dish.id === dishId);
+  if(foundDish) {
+    res.locals.dish = foundDish;
+    return next();
+  }
+  return next({ status: 404, message: `Dish does not exist: ${dishId}` });
 }
 
 // HANDLER FUNCTIONS
