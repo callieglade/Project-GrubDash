@@ -30,7 +30,7 @@ function validateDish(req, res, next) {
 // findDish()
 // Searches the dishes array for the dish matching the provided dishId, responds with code 404 if dish is not found
 function findDish(req, res, next) {
-  const dishId = Number(req.params.dishId);
+  const dishId = req.params.dishId;
   const foundDish = dishes.find(dish => dish.id === dishId);
   if(foundDish) {
     res.locals.dish = foundDish;
