@@ -62,6 +62,15 @@ function validateOrderUpdate(req, res, next) {
   }
 }
 
+// validateDestroy()
+// Validates order for eligibility to be destroyed, responds with code 400 if validation fails
+function validateDestroy(req, res, next) {
+  if (res.locals.order.status === "pending") {
+    return next();
+  }
+  return next({ status: 400, message: `An order cannot be deleted unless it is pending` });
+}
+
 // HANDLER FUNCTIONS
 
 // GET /orders => listOrders()
@@ -104,8 +113,8 @@ function destroyOrder(req, res) {
 
 module.exports = {
   listOrders,
-  createOrder: [validateOrder, createOrder],
-  readOrder: [findOrder, readOrder],
-  updateOrder: [findOrder, validateOrder, validateOrderUpdate, updateOrder],
-  destroyOrder,
+  createOrder:  [validateOrder, createOrder],
+  readOrder:    [findOrder, readOrder],
+  updateOrder:  [findOrder, validateOrder, validateOrderUpdate, updateOrder],
+  destroyOrder: [findOrder, validateDestroy, destroyOrder],
 }
