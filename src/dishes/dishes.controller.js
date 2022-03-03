@@ -44,8 +44,8 @@ function findDish(req, res, next) {
 // Validates that the dishId parameter and the dish.id in the message body match, responds with code 404 if mismatched
 function checkIdMatch(req, res, next) {
   const id = req.body.data.id;
-  if (id && res.locals.dishId === id) return next();
-  return next({ status: 404, message: `Dish id does not match route id. Dish: ${id}, Route: ${res.locals.dishId}` });
+  if (!id || res.locals.dishId === id) return next();
+  return next({ status: 400, message: `Dish id does not match route id. Dish: ${id}, Route: ${res.locals.dishId}` });
 }
 
 // HANDLER FUNCTIONS
@@ -74,6 +74,7 @@ function readDish(req, res) {
 // Updates the dish matching parameter dishId and responds with the updated dish data.
 function updateDish(req, res) {
   res.locals.dish = req.body.data;
+  if (!res.locals.dish.id) res.locals.dish.id = res.locals.dishId;
   res.json({ data: res.locals.dish });
 }
 
