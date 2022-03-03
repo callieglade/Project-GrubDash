@@ -38,10 +38,28 @@ function findOrder(req, res, next) {
   const foundOrder = orders.find(order => order.id === orderId);
   if(foundOrder) {
     res.locals.order = foundOrder;
-    res.locals.orderId = orderId; // Passes to checkIdMatch()
+    res.locals.orderId = orderId; // Passes to validateOrderUpdate()
     return next();
   }
   return next({ status: 404, message: `Order does not exist: ${orderId}` });
+}
+
+// validateOrderUpdate()
+// Validates ID matching and order status, responds with code 404 if validation fails
+function validateOrderUpdate(req, res, next) {
+  const id = req.body.data.id;
+  if (id && res.locals.orderId === id) {
+    return next({ status: 400, message: `Order id does not match route id. Order: ${id}, Route: ${res.locals.orderId}` });
+  }
+  switch (res.locals.order.status) {
+    case undefined:
+    case "":
+      return next({ status: 400, message: `Order must have a status of pending, preparing, out-for-delivery, delivered` });
+    case "delivered":
+      return next({ status: 400, message: `A delivered order cannot be changed` });
+    default:
+      return next();
+  }
 }
 
 // HANDLER FUNCTIONS
