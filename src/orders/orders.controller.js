@@ -14,13 +14,13 @@ function validateOrder(req, res, next) {
   const order = req.body.data;
   var error = { status: 400, message: ""};
 
-  if(!order.deliverTo || order.deliverTo === "") { error.message = "Order must include a deliverTo"; return next(error) }
-  if(!order.mobileNumber || order.mobileNumber === "") { error.message = "Order must include a mobileNumber"; return next(error) }
-  if(!order.dishes) { error.message = "Order must include a dish"; return next(error) }
+  if(!order.deliverTo || order.deliverTo === "")          { error.message = "Order must include a deliverTo"; return next(error) }
+  if(!order.mobileNumber || order.mobileNumber === "")    { error.message = "Order must include a mobileNumber"; return next(error) }
+  if(!order.dishes)                                       { error.message = "Order must include a dish"; return next(error) }
   if(!Array.isArray(order.dishes) || order.dishes === []) { error.message = "Order must include at least one dish"; return next(error) }
   order.dishes.forEach(dish, index => {
     if(!dish.quantity || dish.quantity < 1 || Number.isInteger(dish.quantity)) {
-      error.message = `Dish ${index} must have a quantity that is an integer greater than 0`;
+      error.message = `Order ${index} must have a quantity that is an integer greater than 0`;
       return next(error);
     }
   });
@@ -29,6 +29,19 @@ function validateOrder(req, res, next) {
     res.locals.order = order;
     return next();
   }
+}
+
+// findOrder()
+// Searches the orders array for the order matching the provided orderId, responds with code 404 if order is not found
+function findOrder(req, res, next) {
+  const orderId = req.params.orderId;
+  const foundOrder = orders.find(order => order.id === orderId);
+  if(foundOrder) {
+    res.locals.order = foundOrder;
+    res.locals.orderId = orderId; // Passes to checkIdMatch()
+    return next();
+  }
+  return next({ status: 404, message: `Order does not exist: ${orderId}` });
 }
 
 // HANDLER FUNCTIONS
@@ -50,7 +63,7 @@ function createOrder(req, res) {
 // GET /orders/:orderId => readOrder()
 // Responds with the data of the order matching parameter orderId.
 function readOrder(req, res) {
-
+  res.json({ data: res.locals.order });
 }
 
 // PUT /orders/:orderId => updateOrder()
@@ -68,7 +81,7 @@ function destroyOrder(req, res) {
 module.exports = {
   listOrders,
   createOrder: [validateOrder, createOrder],
-  readOrder,
+  readOrder: [findOrder, readOrder],
   updateOrder,
   destroyOrder,
 }
