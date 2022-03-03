@@ -12,13 +12,14 @@ const nextId = require("../utils/nextId");
 // Validates all fields provided for an order, responds with code 400 and error message if validation fails.
 function validateOrder(req, res, next) {
   const order = req.body.data;
+  const { deliverTo, mobileNumber, dishes } = order; // makes validation code cleaner
   var error = { status: 400, message: ""};
 
-  if(!order.deliverTo || order.deliverTo === "")                { error.message = "Order must include a deliverTo"; return next(error) }
-  if(!order.mobileNumber || order.mobileNumber === "")          { error.message = "Order must include a mobileNumber"; return next(error) }
-  if(!order.dishes)                                             { error.message = "Order must include a dish"; return next(error) }
-  if(!Array.isArray(order.dishes) || order.dishes.length === 0) { error.message = "Order must include at least one dish"; return next(error) }
-  order.dishes.forEach((dish, index) => {
+  if(!deliverTo || deliverTo === "")                { error.message = "Order must include a deliverTo"; return next(error) }
+  if(!mobileNumber || mobileNumber === "")          { error.message = "Order must include a mobileNumber"; return next(error) }
+  if(!dishes)                                             { error.message = "Order must include a dish"; return next(error) }
+  if(!Array.isArray(dishes) || dishes.length === 0) { error.message = "Order must include at least one dish"; return next(error) }
+  dishes.forEach((dish, index) => {
     if(!dish.quantity || dish.quantity < 1 || !Number.isInteger(dish.quantity)) {
       error.message = `Dish ${index} must have a quantity that is an integer greater than 0`;
       return next(error);
