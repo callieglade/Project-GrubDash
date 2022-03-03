@@ -15,7 +15,7 @@ const nextId = require("../utils/nextId");
 // GET /orders => listOrders()
 // Responds with a list of all existing order data.
 function listOrders(req, res) {
-
+  res.json({ data: orders });
 }
 
 // POST /orders => createOrder()
