@@ -87,7 +87,9 @@ function readOrder(req, res) {
 // PUT /orders/:orderId => updateOrder()
 // Updates the order matching parameter orderId and responds with the updated order data.
 function updateOrder(req, res) {
-  
+  res.locals.order = req.body.data;
+  if (!res.locals.order.id) res.locals.order.id = res.locals.orderId;
+  res.json({ data: res.locals.order });
 }
 
 // DELETE /orders/:orderId => destroyOrder()
@@ -100,6 +102,6 @@ module.exports = {
   listOrders,
   createOrder: [validateOrder, createOrder],
   readOrder: [findOrder, readOrder],
-  updateOrder,
+  updateOrder: [findOrder, validateOrder, validateOrderUpdate, updateOrder],
   destroyOrder,
 }
