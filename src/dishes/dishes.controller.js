@@ -61,7 +61,7 @@ function listDishes(req, res) {
 function createDish(req, res) {
   res.locals.dish.id = nextId;
   dishes.push(res.locals.dish);
-  res.status(201).json({ data: dish });
+  res.status(201).json({ data: res.locals.dish });
 }
 
 // GET /dishes/:dishId => readDish()
