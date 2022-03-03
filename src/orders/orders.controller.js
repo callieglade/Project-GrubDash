@@ -26,7 +26,7 @@ function validateOrder(req, res, next) {
   });
 
   if (!error.message) {
-    res.locals.dish = dish;
+    res.locals.order = order;
     return next();
   }
 }
@@ -42,7 +42,9 @@ function listOrders(req, res) {
 // POST /orders => createOrder()
 // Creates a new order and responds with the newly created order data.
 function createOrder(req, res) {
-
+  res.locals.order.id = nextId();
+  orders.push(res.locals.order);
+  res.status(201).json({ data: res.locals.order });
 }
 
 // GET /orders/:orderId => readOrder()
@@ -65,7 +67,7 @@ function destroyOrder(req, res) {
 
 module.exports = {
   listOrders,
-  createOrder,
+  createOrder: [validateOrder, createOrder],
   readOrder,
   updateOrder,
   destroyOrder,
