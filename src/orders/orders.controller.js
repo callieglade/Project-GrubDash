@@ -95,7 +95,11 @@ function updateOrder(req, res) {
 // DELETE /orders/:orderId => destroyOrder()
 // Deletes the order matching parameter orderId and responds with code 204.
 function destroyOrder(req, res) {
-
+  const orderIndex = orders.findIndex(order => order.id === res.locals.orderId);
+  if (orderIndex > -1) {
+    orders.splice(orderIndex, 1);
+  }
+  res.sendStatus(204);
 }
 
 module.exports = {
