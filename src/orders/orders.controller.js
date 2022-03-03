@@ -8,7 +8,28 @@ const nextId = require("../utils/nextId");
 
 // MIDDLEWARE FUNCTIONS
 
+// validateOrder()
+// Validates all fields provided for an order, responds with code 400 and error message if validation fails.
+function validateOrder(req, res, next) {
+  const order = req.body.data;
+  var error = { status: 400, message: ""};
 
+  if(!order.deliverTo || order.deliverTo === "") { error.message = "Order must include a deliverTo"; return next(error) }
+  if(!order.mobileNumber || order.mobileNumber === "") { error.message = "Order must include a mobileNumber"; return next(error) }
+  if(!order.dishes) { error.message = "Order must include a dish"; return next(error) }
+  if(!Array.isArray(order.dishes) || order.dishes === []) { error.message = "Order must include at least one dish"; return next(error) }
+  order.dishes.forEach(dish, index => {
+    if(!dish.quantity || dish.quantity < 1 || Number.isInteger(dish.quantity)) {
+      error.message = `Dish ${index} must have a quantity that is an integer greater than 0`;
+      return next(error);
+    }
+  });
+
+  if (!error.message) {
+    res.locals.dish = dish;
+    return next();
+  }
+}
 
 // HANDLER FUNCTIONS
 
