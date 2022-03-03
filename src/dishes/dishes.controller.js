@@ -12,19 +12,18 @@ const nextId = require("../utils/nextId");
 // Validates all fields provided for a dish, responds with code 400 and error message if validation fails.
 function validateDish(req, res, next) {
   const dish = req.body.data;
-  var message = "";
+  var error = { status: 400, message: ""};
 
-  if(!dish.name || dish.name === "") message = "Dish must include a name";
-  if(!dish.description || dish.description === "") message = "Dish must include a description";
-  if(!dish.price) message = "Dish must include a price";
-  if(dish.price < 0 || Number(dish.price) === NaN) message = "Dish must have a price that is an integer greater than 0";
-  if(!dish.image_url || dish.image_url === "") message = "Dish must include a image_url"
+  if(!dish.name || dish.name === "") { error.message = "Dish must include a name"; return next(error) }
+  if(!dish.description || dish.description === "") { error.message = "Dish must include a description"; return next(error) }
+  if(!dish.price) { error.message = "Dish must include a price"; return next(error) }
+  if(dish.price < 0 || Number(dish.price) === NaN) { error.message = "Dish must have a price that is an integer greater than 0"; return next(error) }
+  if(!dish.image_url || dish.image_url === "") { error.message = "Dish must include a image_url"; return next(error) }
 
-  if (!message) {
+  if (!error.message) {
     res.locals.dish = dish;
     return next();
   }
-  return next({ status: 400, message: message });
 }
 
 // findDish()
