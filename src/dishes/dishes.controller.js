@@ -12,7 +12,7 @@ const nextId = require("../utils/nextId");
 // Validates all fields provided for a dish, responds with code 400 and error message if validation fails.
 function validateDish(req, res, next) {
   const dish = req.body.data;
-  const message = "";
+  var message = "";
 
   if(!dish.name || dish.name === "") message = "Dish must include a name";
   if(!dish.description || dish.description === "") message = "Dish must include a description";
