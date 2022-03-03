@@ -34,9 +34,18 @@ function findDish(req, res, next) {
   const foundDish = dishes.find(dish => dish.id === dishId);
   if(foundDish) {
     res.locals.dish = foundDish;
+    res.locals.dishId = dishId; // Passes to checkIdMatch()
     return next();
   }
   return next({ status: 404, message: `Dish does not exist: ${dishId}` });
+}
+
+// checkIdMatch()
+// Validates that the dishId parameter and the dish.id in the message body match, responds with code 404 if mismatched
+function checkIdMatch(req, res, next) {
+  const id = req.body.data.id;
+  if (id && res.locals.dishId === id) return next();
+  return next({ status: 404, message: `Dish id does not match route id. Dish: ${id}, Route: ${res.locals.dishId}` });
 }
 
 // HANDLER FUNCTIONS
@@ -72,5 +81,5 @@ module.exports = {
   listDishes,
   createDish: [validateDish, createDish],
   readDish:   [findDish, readDish],
-  updateDish: [findDish, validateDish, updateDish],
+  updateDish: [findDish, checkIdMatch, validateDish, updateDish],
 }
