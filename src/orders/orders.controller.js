@@ -14,10 +14,10 @@ function validateOrder(req, res, next) {
   const order = req.body.data;
   var error = { status: 400, message: ""};
 
-  if(!order.deliverTo || order.deliverTo === "")          { error.message = "Order must include a deliverTo"; return next(error) }
-  if(!order.mobileNumber || order.mobileNumber === "")    { error.message = "Order must include a mobileNumber"; return next(error) }
-  if(!order.dishes)                                       { error.message = "Order must include a dish"; return next(error) }
-  if(!Array.isArray(order.dishes) || order.dishes === []) { error.message = "Order must include at least one dish"; return next(error) }
+  if(!order.deliverTo || order.deliverTo === "")                { error.message = "Order must include a deliverTo"; return next(error) }
+  if(!order.mobileNumber || order.mobileNumber === "")          { error.message = "Order must include a mobileNumber"; return next(error) }
+  if(!order.dishes)                                             { error.message = "Order must include a dish"; return next(error) }
+  if(!Array.isArray(order.dishes) || order.dishes.length === 0) { error.message = "Order must include at least one dish"; return next(error) }
   order.dishes.forEach((dish, index) => {
     if(!dish.quantity || dish.quantity < 1 || Number.isInteger(dish.quantity)) {
       error.message = `Order ${index} must have a quantity that is an integer greater than 0`;
